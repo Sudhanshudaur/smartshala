@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Class Details - Smartshala</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg dashboard-nav">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand d-inline-flex gap-2 align-items-center" href="index.html">
+        <span class="material-icons text-primary" style="font-size:24px">school</span>
+        <span class="fw-bold">Smartshala</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dashNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="dashNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
+          <li class="nav-item"><a class="nav-link" href="teacher-dashboard.html" id="nav-dashboard"><span class="material-icons">dashboard</span> Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="liveclass.html"><span class="material-icons">videocam</span> Live Class</a></li>
+          <li class="nav-item"><a class="nav-link" href="lectures.html"><span class="material-icons">video_library</span> Lectures</a></li>
+          <li class="nav-item"><a class="nav-link" href="notes.html"><span class="material-icons">description</span> Notes</a></li>
+          <li class="nav-item"><a class="nav-link" href="leaderboard.html"><span class="material-icons">leaderboard</span> Leaderboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="ai-planner.html"><span class="material-icons">route</span> AI Planner</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-3">
+          <div class="profile-btn">
+            <div class="text-end">
+              <span class="profile-name" id="user-name">User</span>
+              <span class="profile-role d-block" id="user-role">Role</span>
+            </div>
+            <img src="https://ui-avatars.com/api/?name=User&background=random" alt="Profile" id="user-avatar" style="width:36px;height:36px;border-radius:50%;border:2px solid #e5e5e5">
+          </div>
+          <a href="#" id="logout-btn" class="btn btn-outline-primary btn-sm">
+            <span class="material-icons" style="font-size:16px">logout</span> Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <!-- Page Header -->
+    <div class="page-header mb-4">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 position-relative" style="z-index:1">
+        <div>
+          <a href="javascript:history.back()" class="text-white text-decoration-none small mb-2 d-inline-block opacity-75">
+            <span class="material-icons" style="font-size:16px;vertical-align:middle">arrow_back</span> Back
+          </a>
+          <h1 id="class-name"><span class="material-icons me-2" style="font-size:1.5rem;vertical-align:middle">class</span>Loading...</h1>
+          <p id="class-code">Code: ...</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+          <span id="live-badge" class="badge bg-danger rounded-pill px-3 py-2" style="display:none">
+            <span style="animation:pulse 1.5s infinite">â—</span> LIVE NOW
+          </span>
+          <button id="start-live-btn" class="btn btn-success btn-sm" style="display:none">Start Live Class</button>
+          <button id="join-live-btn" class="btn btn-light btn-sm" style="display:none">Join Live Class</button>
+          <button id="edit-class-btn" class="btn btn-outline-primary btn-sm" style="display:none;border-color:rgba(255,255,255,.5);color:#fff">Edit Name</button>
+          <button id="delete-class-btn" class="btn btn-danger btn-sm" style="display:none">Delete Class</button>
+          <button id="unenroll-btn" class="btn btn-danger btn-sm" style="display:none">Unenroll</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Syllabus -->
+      <div class="col-lg-8">
+        <div class="card rounded-5 shadow-sm">
+          <div class="card-header bg-transparent px-4 py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">Syllabus</h5>
+            <button id="save-syllabus-btn" class="btn btn-primary btn-sm" style="display:none">Save</button>
+          </div>
+          <div class="card-body p-4">
+            <textarea id="syllabus-content" placeholder="Syllabus not available" readonly class="form-control" style="min-height:200px;resize:vertical;border-radius:0.75rem"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapters -->
+      <div class="col-lg-4">
+        <div class="card rounded-5 shadow-sm">
+          <div class="card-header bg-transparent px-4 py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">Chapters</h5>
+            <button id="add-chapter-btn" class="btn btn-outline-primary btn-sm" style="display:none">+ Add</button>
+          </div>
+          <div class="card-body p-4" id="chapters-list">
+            <p class="text-muted">No chapters added yet.</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Assignments & Grades -->
+      <div class="col-12">
+        <div class="card rounded-5 shadow-sm">
+          <div class="card-header bg-transparent px-4 py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">Assignments & Grades</h5>
+            <button id="create-assignment-btn" class="btn btn-outline-primary btn-sm" style="display:none">+ Assignment</button>
+          </div>
+          <div class="card-body p-4">
+            <div id="assignments-list" class="d-flex flex-column gap-3">
+              <p class="text-muted">No assignments yet.</p>
+            </div>
+            <div id="grades-panel" class="mt-4" style="display:none">
+              <h6 class="text-primary mb-3">Grades</h6>
+              <div id="grades-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Quizzes -->
+      <div class="col-12">
+        <div class="card rounded-5 shadow-sm">
+          <div class="card-header bg-transparent px-4 py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">AI Quizzes</h5>
+            <button id="generate-quiz-btn" class="btn btn-outline-primary btn-sm" style="display:none">AI Generate Quiz</button>
+          </div>
+          <div class="card-body p-4">
+            <div id="quizzes-list" class="d-flex flex-column gap-3">
+              <p class="text-muted">No quizzes yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <input type="file" id="lecture-file-input" style="display:none" />
+  <input type="file" id="assignment-file-input" style="display:none" />
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/theme-toggle.js"></script>
+  <script>
+    const user = JSON.parse(localStorage.getItem('smartshala_auth') || sessionStorage.getItem('smartshala_auth') || 'null');
+    if (!user || !user.isAuthenticated) { window.location.href = 'login.html'; }
+
+    if (user.name) {
+      document.getElementById('user-name').textContent = user.name;
+      document.getElementById('user-role').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+      document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random`;
+    }
+
+    const dashboardLink = document.getElementById('nav-dashboard');
+    dashboardLink.href = user.role === 'teacher' ? 'teacher-dashboard.html' : 'student-dashboard.html';
+
+    document.getElementById('logout-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('smartshala_auth');
+      sessionStorage.removeItem('smartshala_auth');
+      window.location.href = 'login.html';
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const CLASS_ID = urlParams.get('id');
+    if (!CLASS_ID) { alert('Class ID not found'); window.location.href = 'teacher-dashboard.html'; }
+
+    const classNameEl = document.getElementById('class-name');
+    const classCodeEl = document.getElementById('class-code');
+    const syllabusContent = document.getElementById('syllabus-content');
+    const saveSyllabusBtn = document.getElementById('save-syllabus-btn');
+    const chaptersList = document.getElementById('chapters-list');
+    const addChapterBtn = document.getElementById('add-chapter-btn');
+    const notesList = document.getElementById('notes-list');
+    const addNoteBtn = document.getElementById('add-note-btn');
+    const lecturesList = document.getElementById('lectures-list');
+    const uploadLectureBtn = document.getElementById('upload-lecture-btn');
+    const liveBadge = document.getElementById('live-badge');
+    const startLiveBtn = document.getElementById('start-live-btn');
+    const joinLiveBtn = document.getElementById('join-live-btn');
+    const editClassBtn = document.getElementById('edit-class-btn');
+    const deleteClassBtn = document.getElementById('delete-class-btn');
+    const unenrollBtn = document.getElementById('unenroll-btn');
+    const createAssignmentBtn = document.getElementById('create-assignment-btn');
+    const assignmentsList = document.getElementById('assignments-list');
+    const gradesPanel = document.getElementById('grades-panel');
+    const gradesList = document.getElementById('grades-list');
+    const generateQuizBtn = document.getElementById('generate-quiz-btn');
+    const quizzesList = document.getElementById('quizzes-list');
+    const lectureFileInput = document.getElementById('lecture-file-input');
+    const assignmentFileInput = document.getElementById('assignment-file-input');
+    let pendingLectureTitle = '';
+    let pendingAssignmentId = null;
+    let quizzesById = {};
+
+    async function loadClassDetails() {
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}`, { headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (!res) return;
+        if (!res.ok) throw new Error('Failed to load class');
+        const cls = await res.json();
+        classNameEl.innerHTML = `<span class="material-icons me-2" style="font-size:1.5rem;vertical-align:middle">class</span>${cls.name}`;
+        classCodeEl.textContent = `Code: ${cls.code}`;
+        syllabusContent.value = cls.syllabus || '';
+        if (user.role === 'teacher') {
+          syllabusContent.removeAttribute('readonly');
+          saveSyllabusBtn.style.display = 'inline-flex';
+          addChapterBtn.style.display = 'inline-flex';
+          if (addNoteBtn) addNoteBtn.style.display = 'inline-flex';
+          if (uploadLectureBtn) uploadLectureBtn.style.display = 'inline-flex';
+          createAssignmentBtn.style.display = 'inline-flex';
+          generateQuizBtn.style.display = 'inline-flex';
+          startLiveBtn.style.display = 'inline-flex';
+          editClassBtn.style.display = 'inline-flex';
+          deleteClassBtn.style.display = 'inline-flex';
+        } else {
+          joinLiveBtn.style.display = 'inline-flex';
+          unenrollBtn.style.display = 'inline-flex';
+          gradesPanel.style.display = 'block';
+        }
+        checkLiveStatus(); loadChapters(); loadNotes(); loadLectures(); loadAssignments(); loadQuizzes();
+        if (user.role === 'student') loadGrades();
+      } catch (err) { console.error(err); await Smartshala.alert('Error loading class details'); }
+    }
+
+    async function checkLiveStatus() {
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/live`, { headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (!res) return;
+        const data = await res.json();
+        if (data.active) {
+          liveBadge.style.display = 'inline-flex';
+          const liveUrl = `liveclass.html?classId=${CLASS_ID}&room=${data.session.room_id}&session=${data.session.id}`;
+          if (user.role === 'student') { joinLiveBtn.style.display = 'inline-flex'; joinLiveBtn.onclick = () => window.location.href = liveUrl; }
+          else { startLiveBtn.textContent = 'Resume Live Class'; startLiveBtn.onclick = () => window.location.href = liveUrl; }
+        } else {
+          liveBadge.style.display = 'none';
+          if (user.role === 'teacher') {
+            startLiveBtn.onclick = async () => {
+              try {
+                const res = await apiFetch(`/api/classes/${CLASS_ID}/live/start`, { method: 'POST', headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+                if (res.ok) { const session = await res.json(); window.location.href = `liveclass.html?classId=${CLASS_ID}&room=${session.room_id}&session=${session.id}`; }
+              } catch (e) { console.error(e); }
+            };
+          }
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function loadChapters() {
+      const res = await apiFetch(`/api/classes/${CLASS_ID}/chapters`, { headers: { 'Authorization': `Bearer ${user.token}` } });
+      if (!res) return;
+      const chapters = await res.json();
+      if (chapters.length) {
+        chaptersList.innerHTML = chapters.map(c => `
+          <div class="p-3 border-bottom"><h6 class="mb-1">${c.title}</h6><p class="text-muted small mb-0">${c.content}</p></div>
+        `).join('');
+      } else { chaptersList.innerHTML = '<p class="text-muted">No chapters added yet.</p>'; }
+    }
+
+    async function loadNotes() {
+      if (!notesList) return;
+      const res = await apiFetch(`/api/classes/${CLASS_ID}/notes`, { headers: { 'Authorization': `Bearer ${user.token}` } });
+      if (!res) return;
+      const notes = await res.json();
+      if (notes.length) {
+        notesList.innerHTML = notes.map(n => `
+          <div class="card rounded-4 shadow-sm"><div class="card-body p-3"><h6 class="mb-1">${n.title}</h6><p class="text-muted small mb-0">${n.content.substring(0, 100)}...</p></div></div>
+        `).join('');
+      } else { notesList.innerHTML = '<p class="text-muted">No notes added yet.</p>'; }
+    }
+
+    async function loadLectures() {
+      if (!lecturesList) return;
+      const res = await apiFetch(`/api/classes/${CLASS_ID}/lectures`, { headers: { 'Authorization': `Bearer ${user.token}` } });
+      if (!res) return;
+      const lectures = await res.json();
+      if (lectures.length) {
+        lecturesList.innerHTML = lectures.map(l => `
+          <div class="card rounded-4 shadow-sm"><div class="card-body p-3"><h6 class="mb-1">${l.title}</h6><a href="${l.url}" target="_blank" download class="btn btn-outline-primary btn-sm w-100 mt-2">Download</a></div></div>
+        `).join('');
+      } else { lecturesList.innerHTML = '<p class="text-muted">No lectures uploaded yet.</p>'; }
+    }
+
+    function formatDate(value) {
+      return value ? new Date(value).toLocaleString() : 'No due date';
+    }
+
+    async function loadAssignments() {
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/assignments`, { headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (!res) return;
+        const assignments = await res.json();
+        if (!assignments.length) {
+          assignmentsList.innerHTML = '<p class="text-muted">No assignments yet.</p>';
+          return;
+        }
+        assignmentsList.innerHTML = assignments.map(a => {
+          const submitted = !!a.submission;
+          const scoreText = submitted && a.submission.score !== null && a.submission.score !== undefined ? `${a.submission.score}/${a.max_score}` : 'Pending grade';
+          return `
+            <div class="border rounded-4 p-3 bg-white">
+              <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+                <div>
+                  <h6 class="fw-bold mb-1">${a.title}</h6>
+                  <p class="text-muted small mb-2">${a.description || 'No description'}<br>Due: ${formatDate(a.due_at)}</p>
+                  ${user.role === 'student' ? `<span class="badge ${submitted ? 'bg-success' : 'bg-secondary'} rounded-pill">${submitted ? 'Submitted - ' + scoreText : 'Not submitted'}</span>` : `<span class="badge bg-primary rounded-pill">${a.submission_count || 0} submissions</span>`}
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                  ${user.role === 'student' ? `<button class="btn btn-outline-primary btn-sm" onclick="submitAssignment('${a.id}')">${submitted ? 'Resubmit' : 'Upload'}</button>` : `
+                    <button class="btn btn-outline-primary btn-sm" onclick="viewSubmissions('${a.id}')">Submissions</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="deleteAssignment('${a.id}')">Delete</button>
+                  `}
+                </div>
+              </div>
+              <div id="submissions-${a.id}" class="mt-3" style="display:none"></div>
+            </div>`;
+        }).join('');
+      } catch (err) {
+        console.error(err);
+        assignmentsList.innerHTML = '<p class="text-danger">Failed to load assignments.</p>';
+      }
+    }
+
+    async function loadQuizzes() {
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/quizzes`, { headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (!res) return;
+        if (!res.ok) throw new Error('Failed to load quizzes');
+        const quizzes = await res.json();
+        quizzesById = {};
+        quizzes.forEach(q => { quizzesById[q.id] = q; });
+        if (!quizzes.length) {
+          quizzesList.innerHTML = '<p class="text-muted">No quizzes yet.</p>';
+          return;
+        }
+        quizzesList.innerHTML = quizzes.map(renderQuizCard).join('');
+      } catch (err) {
+        console.error(err);
+        quizzesList.innerHTML = '<p class="text-danger">Failed to load quizzes.</p>';
+      }
+    }
+
+    function renderQuizCard(q) {
+      const attempted = !!q.attempt;
+      const attemptText = attempted ? `${q.attempt.score}/${q.attempt.max_score} pts - ${q.attempt.feedback || ''}` : 'Not attempted';
+      const teacherQuestions = user.role === 'teacher' ? `
+        <details class="mt-3">
+          <summary class="fw-semibold text-primary">Questions</summary>
+          <div class="mt-2 d-flex flex-column gap-2">
+            ${(q.questions || []).map((question, index) => `
+              <div class="border rounded-3 p-2 bg-light">
+                <div class="fw-semibold small">${index + 1}. ${escapeHtml(question.prompt)}</div>
+                <div class="text-muted small">${(question.options || []).map(option => `${escapeHtml(option.key)}. ${escapeHtml(option.text)}`).join('<br>')}</div>
+                <span class="badge bg-success rounded-pill mt-2">Answer: ${escapeHtml(question.correct_option || '')}</span>
+              </div>
+            `).join('')}
+          </div>
+        </details>` : '';
+      return `
+        <div class="border rounded-4 p-3 bg-white">
+          <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+            <div>
+              <h6 class="fw-bold mb-1">${escapeHtml(q.title)}</h6>
+              <p class="text-muted small mb-2">${escapeHtml(q.source_title || 'Class material')}<br>${q.question_count || 0} questions - ${q.max_score || 0} pts</p>
+              ${user.role === 'student' ? `<span class="badge ${attempted ? 'bg-success' : 'bg-secondary'} rounded-pill">${escapeHtml(attemptText)}</span>` : `<span class="badge bg-primary rounded-pill">${q.attempt_count || 0} attempts</span>`}
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+              ${user.role === 'student' ? `<button class="btn btn-outline-primary btn-sm" onclick="takeQuiz('${q.id}')">${attempted ? 'Retake' : 'Take Quiz'}</button>` : `
+                <button class="btn btn-outline-primary btn-sm" onclick="viewQuizAttempts('${q.id}')">Attempts</button>
+                <button class="btn btn-outline-danger btn-sm" onclick="deleteQuiz('${q.id}')">Delete</button>
+              `}
+            </div>
+          </div>
+          ${teacherQuestions}
+          <div id="quiz-play-${q.id}" class="mt-3" style="display:none"></div>
+          <div id="quiz-attempts-${q.id}" class="mt-3" style="display:none"></div>
+        </div>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+
+    async function loadGrades() {
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/assignments/grades`, { headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (!res) return;
+        if (!res.ok) return;
+        const data = await res.json();
+        const rows = data.grades || [];
+        gradesList.innerHTML = `
+          <div class="alert alert-primary rounded-4">Overall score: <strong>${data.overallScore || 0}</strong></div>
+          ${rows.map(a => {
+            const s = a.submission;
+            const status = s ? (s.score !== null && s.score !== undefined ? `${s.score}/${a.max_score}` : 'Submitted, waiting for grade') : 'Not submitted';
+            return `<div class="d-flex justify-content-between border-bottom py-2"><span>${a.title}</span><strong>${status}</strong></div>`;
+          }).join('') || '<p class="text-muted">No grades yet.</p>'}`;
+      } catch (err) { console.error(err); }
+    }
+
+    async function submitAssignment(assignmentId) {
+      showComingSoonModal();
+    }
+
+    async function viewSubmissions(assignmentId) {
+      const target = document.getElementById(`submissions-${assignmentId}`);
+      target.style.display = target.style.display === 'none' ? 'block' : 'none';
+      if (target.dataset.loaded === 'true') return;
+      target.innerHTML = '<div class="text-muted small">Loading submissions...</div>';
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/assignments/${assignmentId}/submissions`, { headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (!res) return;
+        const submissions = await res.json();
+        target.dataset.loaded = 'true';
+        target.innerHTML = submissions.map(s => `
+          <div class="d-flex justify-content-between align-items-center border-top py-2 gap-2 flex-wrap">
+            <div>
+              <strong>${s.student ? s.student.name : 'Student'}</strong>
+              <div class="text-muted small">${s.submitted_at ? new Date(s.submitted_at).toLocaleString() : ''}</div>
+              ${s.file_url ? `<a href="${s.file_url}" target="_blank" download>Download submission</a>` : '<span class="text-muted small">No file attached</span>'}
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-light text-dark">${s.score === null || s.score === undefined ? 'Ungraded' : s.score + ' pts'}</span>
+              <button class="btn btn-outline-primary btn-sm" onclick="gradeSubmission('${assignmentId}', '${s.id}', ${s.score === null || s.score === undefined ? 0 : s.score})">Grade</button>
+            </div>
+          </div>
+        `).join('') || '<p class="text-muted small mb-0">No submissions yet.</p>';
+      } catch (err) {
+        target.innerHTML = '<p class="text-danger small mb-0">Failed to load submissions.</p>';
+      }
+    }
+
+    if (saveSyllabusBtn) {
+      saveSyllabusBtn.addEventListener('click', async () => {
+        await apiFetch(`/api/classes/${CLASS_ID}/details`, { method: 'PUT', headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ syllabus: syllabusContent.value }) });
+        await Smartshala.alert('Syllabus saved');
+      });
+    }
+
+    if (addChapterBtn) {
+      addChapterBtn.addEventListener('click', async () => {
+        const title = await Smartshala.prompt('Chapter Title');
+        if (!title) return;
+        const content = await Smartshala.prompt('Chapter Content');
+        await apiFetch(`/api/classes/${CLASS_ID}/chapters`, { method: 'POST', headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ title, content }) });
+        loadChapters();
+      });
+    }
+
+    if (addNoteBtn) {
+      addNoteBtn.addEventListener('click', async () => {
+        const title = await Smartshala.prompt('Note Title');
+        if (!title) return;
+        const content = await Smartshala.prompt('Note Content');
+        await apiFetch(`/api/classes/${CLASS_ID}/notes`, { method: 'POST', headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ title, content }) });
+        loadNotes();
+      });
+    }
+
+    if (uploadLectureBtn) {
+      uploadLectureBtn.addEventListener('click', () => {
+        showComingSoonModal();
+      });
+    }
+
+    lectureFileInput.addEventListener('change', async () => {
+      const file = lectureFileInput.files[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append('lectureFile', file);
+      formData.append('title', pendingLectureTitle || file.name.replace(/\.[^/.]+$/, ''));
+      formData.append('subject', classNameEl.textContent.replace('class', '').trim());
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/lectures`, { method: 'POST', headers: { 'Authorization': `Bearer ${user.token}` }, body: formData });
+        if (!res) return;
+        if (!res.ok) throw new Error('Upload failed');
+        Smartshala.toast('Material uploaded');
+        loadLectures();
+      } catch (err) { await Smartshala.alert('Upload failed: ' + err.message); }
+    });
+
+    if (createAssignmentBtn) {
+      createAssignmentBtn.addEventListener('click', async () => {
+        const title = await Smartshala.prompt('Assignment title:', 'Assignment title');
+        if (!title) return;
+        const description = await Smartshala.prompt('Instructions:', 'Assignment instructions');
+        const maxScoreText = await Smartshala.prompt('Maximum score:', '100');
+        const maxScore = parseInt(maxScoreText || '100', 10);
+        try {
+          const res = await apiFetch(`/api/classes/${CLASS_ID}/assignments`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, description, maxScore: isNaN(maxScore) ? 100 : maxScore })
+          });
+          if (!res) return;
+          if (!res.ok) throw new Error('Failed to create assignment');
+          Smartshala.toast('Assignment created');
+          loadAssignments();
+        } catch (err) { await Smartshala.alert('Failed to create assignment: ' + err.message); }
+      });
+    }
+
+    if (generateQuizBtn) {
+      generateQuizBtn.addEventListener('click', async () => {
+        const topic = await Smartshala.prompt('Quiz topic:', classNameEl.textContent.trim());
+        if (!topic) return;
+        const countText = await Smartshala.prompt('Number of questions (3-10):', '5');
+        const questionCount = parseInt(countText || '5', 10);
+        const maxScoreText = await Smartshala.prompt('Maximum quiz score:', '50');
+        const maxScore = parseInt(maxScoreText || '50', 10);
+        const sourceText = await Smartshala.prompt('Optional: paste lecture text or notes. Leave blank to use class material:', '');
+        try {
+          const res = await apiFetch(`/api/classes/${CLASS_ID}/quizzes/generate`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              topic,
+              source_text: sourceText || '',
+              question_count: isNaN(questionCount) ? 5 : questionCount,
+              max_score: isNaN(maxScore) ? 50 : maxScore
+            })
+          });
+          if (!res) return;
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error || 'Quiz generation failed');
+          await Smartshala.alert('AI quiz generated', 'Success');
+          loadQuizzes();
+        } catch (err) { await Smartshala.alert('Quiz generation failed: ' + err.message); }
+      });
+    }
+
+    window.takeQuiz = (quizId) => {
+      const quiz = quizzesById[quizId];
+      const target = document.getElementById(`quiz-play-${quizId}`);
+      if (!quiz || !target) return;
+      target.style.display = target.style.display === 'none' ? 'block' : 'none';
+      if (target.dataset.loaded === 'true') return;
+      target.dataset.loaded = 'true';
+      target.innerHTML = `
+        <form onsubmit="submitQuiz(event, '${quizId}')" class="d-flex flex-column gap-3">
+          ${(quiz.questions || []).map((question, index) => `
+            <div class="border rounded-3 p-3 bg-light">
+              <div class="fw-semibold mb-2">${index + 1}. ${escapeHtml(question.prompt)}</div>
+              ${(question.options || []).map(option => `
+                <label class="d-block border rounded-3 bg-white p-2 mb-2">
+                  <input class="form-check-input me-2" type="radio" name="question-${question.id}" value="${escapeHtml(option.key)}">
+                  <strong>${escapeHtml(option.key)}.</strong> ${escapeHtml(option.text)}
+                </label>
+              `).join('')}
+            </div>
+          `).join('')}
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary btn-sm" type="submit">Submit Quiz</button>
+            <button class="btn btn-outline-secondary btn-sm" type="button" onclick="document.getElementById('quiz-play-${quizId}').style.display='none'">Close</button>
+          </div>
+        </form>`;
+    };
+
+    window.submitQuiz = async (event, quizId) => {
+      event.preventDefault();
+      const quiz = quizzesById[quizId];
+      if (!quiz) return;
+      const answers = {};
+      let missing = 0;
+      (quiz.questions || []).forEach(question => {
+        const selected = document.querySelector(`input[name="question-${question.id}"]:checked`);
+        if (selected) answers[question.id] = selected.value;
+        else missing++;
+      });
+      if (missing > 0) { await Smartshala.alert('Please answer every question before submitting.'); return; }
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/quizzes/${quizId}/submit`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answers })
+        });
+        if (!res) return;
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Quiz submission failed');
+        const attempt = data.attempt || {};
+        await Smartshala.alert(`Quiz score: ${attempt.score}/${attempt.max_score}. Leaderboard score: ${data.leaderboardScore}`, 'Submitted');
+        loadQuizzes();
+        if (user.role === 'student') loadGrades();
+      } catch (err) { await Smartshala.alert('Quiz submission failed: ' + err.message); }
+    };
+
+    window.viewQuizAttempts = async (quizId) => {
+      const target = document.getElementById(`quiz-attempts-${quizId}`);
+      if (!target) return;
+      target.style.display = target.style.display === 'none' ? 'block' : 'none';
+      if (target.dataset.loaded === 'true') return;
+      target.innerHTML = '<div class="text-muted small">Loading attempts...</div>';
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/quizzes/${quizId}/attempts`, { headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (!res) return;
+        const attempts = await res.json();
+        target.dataset.loaded = 'true';
+        target.innerHTML = attempts.map(a => `
+          <div class="d-flex justify-content-between align-items-center border-top py-2 gap-2 flex-wrap">
+            <div>
+              <strong>${escapeHtml(a.student ? a.student.name : 'Student')}</strong>
+              <div class="text-muted small">${a.submitted_at ? new Date(a.submitted_at).toLocaleString() : ''}</div>
+            </div>
+            <span class="badge bg-light text-dark">${a.score}/${a.max_score} pts - ${escapeHtml(a.feedback || '')}</span>
+          </div>
+        `).join('') || '<p class="text-muted small mb-0">No attempts yet.</p>';
+      } catch (err) {
+        target.innerHTML = '<p class="text-danger small mb-0">Failed to load attempts.</p>';
+      }
+    };
+
+    window.deleteQuiz = async (quizId) => {
+      if (!await Smartshala.confirm('Delete this quiz and all attempts?')) return;
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/quizzes/${quizId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (!res) return;
+        if (!res.ok) throw new Error('Delete failed');
+        loadQuizzes();
+      } catch (err) { await Smartshala.alert('Delete failed: ' + err.message); }
+    };
+
+    assignmentFileInput.addEventListener('change', async () => {
+      const file = assignmentFileInput.files[0];
+      if (!pendingAssignmentId || !file) return;
+      const notes = await Smartshala.prompt('Submission note (optional):', 'Note');
+      const formData = new FormData();
+      formData.append('file', file);
+      if (notes) formData.append('notes', notes);
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/assignments/${pendingAssignmentId}/submit`, { method: 'POST', headers: { 'Authorization': `Bearer ${user.token}` }, body: formData });
+        if (!res) return;
+        if (!res.ok) throw new Error('Submission failed');
+        await Smartshala.alert('Assignment submitted', 'Success');
+        loadAssignments();
+        loadGrades();
+      } catch (err) { await Smartshala.alert('Submission failed: ' + err.message); }
+    });
+
+    window.gradeSubmission = async (assignmentId, submissionId, currentScore) => {
+      const scoreText = await Smartshala.prompt('Score:', String(currentScore || 0));
+      if (scoreText === null) return;
+      const score = parseInt(scoreText, 10);
+      if (isNaN(score)) { await Smartshala.alert('Enter a valid number'); return; }
+      const feedback = await Smartshala.prompt('Feedback (optional):', 'Feedback');
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/assignments/${assignmentId}/submissions/${submissionId}/grade`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ score, feedback })
+        });
+        if (!res) return;
+        if (!res.ok) throw new Error('Grade update failed');
+        const target = document.getElementById(`submissions-${assignmentId}`);
+        if (target) target.dataset.loaded = 'false';
+        await viewSubmissions(assignmentId);
+        await Smartshala.alert('Grade saved', 'Success');
+      } catch (err) { await Smartshala.alert('Grade update failed: ' + err.message); }
+    };
+
+    window.deleteAssignment = async (assignmentId) => {
+      if (!await Smartshala.confirm('Delete this assignment and its submissions?')) return;
+      try {
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/assignments/${assignmentId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (!res) return;
+        if (!res.ok) throw new Error('Delete failed');
+        loadAssignments();
+      } catch (err) { await Smartshala.alert('Delete failed: ' + err.message); }
+    };
+
+    if (editClassBtn) {
+      editClassBtn.addEventListener('click', async () => {
+        const name = await Smartshala.prompt('Class name:', classNameEl.textContent.trim());
+        if (!name) return;
+        const res = await apiFetch(`/api/classes/${CLASS_ID}`, { method: 'PUT', headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
+        if (res.ok) loadClassDetails();
+      });
+    }
+
+    if (deleteClassBtn) {
+      deleteClassBtn.addEventListener('click', async () => {
+        if (!await Smartshala.confirm('Delete this class and all related material?')) return;
+        const res = await apiFetch(`/api/classes/${CLASS_ID}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (res.ok) window.location.href = 'teacher-dashboard.html';
+      });
+    }
+
+    if (unenrollBtn) {
+      unenrollBtn.addEventListener('click', async () => {
+        if (!await Smartshala.confirm('Unenroll from this class?')) return;
+        const res = await apiFetch(`/api/classes/${CLASS_ID}/enrollment`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${user.token}` } });
+        if (res.ok) window.location.href = 'student-dashboard.html';
+      });
+    }
+
+    loadClassDetails();
+  </script>
+</body>
+</html>

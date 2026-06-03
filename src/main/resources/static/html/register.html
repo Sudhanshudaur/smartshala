@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register - Smartshala</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #4338ca 0%, #6366f1 40%, #818cf8 100%);
+      min-height: 100vh;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .auth-card {
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 1.25rem;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.1);
+      border: none;
+    }
+    .auth-card .brand-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 2rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #6366f1;
+      text-decoration: none;
+    }
+    .auth-card .brand-logo .material-icons { font-size: 28px; }
+    .form-group {
+      position: relative;
+      margin-bottom: 1.1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #374151;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid #d4d4d4;
+      border-radius: 0.6rem;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      background: #fff;
+      color: #171717;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    }
+    .form-group.error input,
+    .form-group.error select { border-color: #ef4444; }
+    .form-group .error-text {
+      color: #ef4444;
+      font-size: 0.82rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    .form-group.error .error-text { display: block; }
+    .toggle-password {
+      position: absolute;
+      right: 0.75rem;
+      top: 2.3rem;
+      color: #a3a3a3;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+    }
+    .toggle-password .material-icons { font-size: 20px; }
+    .toggle-password:hover { color: #6366f1; }
+    .password-requirements {
+      font-size: 0.82rem;
+      color: #737373;
+      margin: 0.5rem 0;
+      padding: 0.75rem;
+      background: #fafafa;
+      border-radius: 0.5rem;
+      border: 1px solid #e5e5e5;
+    }
+    .requirement {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.25rem 0;
+    }
+    .requirement::before {
+      content: '\2022';
+      color: #a3a3a3;
+    }
+    .requirement.met { color: #16a34a; }
+    .requirement.met::before {
+      content: '\2713';
+      color: #16a34a;
+    }
+    .strength-meter {
+      height: 4px;
+      background: #e5e5e5;
+      margin: 0.5rem 0;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .strength-meter div {
+      height: 100%;
+      width: 0;
+      transition: all 0.3s;
+    }
+    .strength-meter.weak div { width: 33%; background: #ef4444; }
+    .strength-meter.medium div { width: 66%; background: #f59e0b; }
+    .strength-meter.strong div { width: 100%; background: #22c55e; }
+    .loading { pointer-events: none; opacity: 0.7; }
+    .loading button[type="submit"] { position: relative; color: transparent; }
+    .loading button[type="submit"]::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 1.5rem;
+      height: 1.5rem;
+      border: 2px solid #fff;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Dark theme */
+    [data-theme="dark"] body { background: #0f0f0f !important; }
+    [data-theme="dark"] body::before { display: none; }
+    [data-theme="dark"] .auth-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    [data-theme="dark"] .auth-nav { background: transparent !important; box-shadow: none !important; }
+    [data-theme="dark"] .auth-nav .navbar-brand span { color: #d4d4d4 !important; }
+    [data-theme="dark"] .auth-nav .material-icons { color: #a5b4fc !important; }
+    [data-theme="dark"] h1 { color: #f5f5f5 !important; }
+    [data-theme="dark"] .form-group label { color: #d4d4d4; }
+    [data-theme="dark"] .form-group input,
+    [data-theme="dark"] .form-group select {
+      background: #141414;
+      border-color: #333;
+      color: #e5e5e5;
+    }
+    [data-theme="dark"] .password-requirements {
+      background: #141414;
+      border-color: #262626;
+      color: #a3a3a3;
+    }
+    [data-theme="dark"] .strength-meter { background: #333; }
+    [data-theme="dark"] .muted { color: #737373; }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="auth-nav navbar navbar-expand-lg sticky-top" style="padding:10px 0;background:transparent !important;box-shadow:none !important">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <span class="material-icons" style="font-size:28px;color:#e0e7ff">school</span>
+        <span class="fw-bold" style="font-size:1.15rem;color:#fff">Smartshala</span>
+      </a>
+      <div class="d-flex gap-2">
+        <a href="index.html" class="btn btn-outline-light btn-sm px-4">Home</a>
+        <a href="login.html" class="btn btn-light btn-sm px-4">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="auth-wrapper">
+    <div class="auth-card">
+      <a class="brand-logo" href="index.html">
+        <span class="material-icons">school</span>
+        Smartshala
+      </a>
+      <form id="auth-register-form" class="auth-form" novalidate>
+        <h1 style="font-size:1.5rem;margin:0 0 1.5rem;text-align:center;color:#171717">Create Account</h1>
+
+        <div class="form-group">
+          <label for="reg-name">Full Name</label>
+          <input type="text" id="reg-name" required placeholder="Your full name" autocomplete="name" />
+          <div class="error-text">Please enter your full name</div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email">Email</label>
+          <input type="email" id="reg-email" required placeholder="you@example.com" autocomplete="email" />
+          <div class="error-text">Please enter a valid email address</div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <input type="password" id="reg-password" required placeholder="Choose a password"
+            autocomplete="new-password" />
+          <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+            <span class="material-icons">visibility</span>
+          </button>
+          <div class="error-text">Password must meet all requirements below</div>
+          <div class="strength-meter">
+            <div></div>
+          </div>
+          <div class="password-requirements">
+            <div class="requirement" data-requirement="length">At least 8 characters</div>
+            <div class="requirement" data-requirement="letter">At least one letter</div>
+            <div class="requirement" data-requirement="number">At least one number</div>
+            <div class="requirement" data-requirement="special">At least one special character</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-role">Role</label>
+          <select id="reg-role" required>
+            <option value="">Select your role</option>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+          </select>
+          <div class="error-text">Please select your role</div>
+        </div>
+
+        <div class="form-group" id="class-code-group" style="display:none">
+          <label for="reg-class-code">Class Code (Optional)</label>
+          <input type="text" id="reg-class-code" placeholder="Enter 6-character code" maxlength="6"
+            style="text-transform:uppercase" />
+          <div class="error-text">Please enter a valid class code</div>
+        </div>
+
+        <div id="error-msg" class="error-msg" style="color:#dc2626;margin:.5rem 0;display:none"></div>
+
+        <button class="btn btn-primary" type="submit" style="width:100%;margin-top:1rem;padding:0.65rem">
+          Create Account
+        </button>
+
+        <p class="muted" style="text-align:center;margin-top:1.5rem;color:#737373;font-size:0.9rem">
+          Already have an account? <a href="login.html" style="color:#6366f1;font-weight:600">Login here</a>
+        </p>
+      </form>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="../js/firebase-init.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/theme-toggle.js"></script>
+  <script>
+    const form = document.getElementById('auth-register-form');
+    const errorMsg = document.getElementById('error-msg');
+    const passwordInput = document.getElementById('reg-password');
+    const requirements = document.querySelectorAll('.requirement');
+    const strengthMeter = document.querySelector('.strength-meter');
+
+    // Password visibility toggle
+    document.querySelector('.toggle-password').addEventListener('click', function () {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      this.querySelector('.material-icons').textContent = type === 'password' ? 'visibility' : 'visibility_off';
+    });
+
+    // Password strength and requirements check
+    function checkPassword(password) {
+      const checks = {
+        length: password.length >= 8,
+        letter: /[a-zA-Z]/.test(password),
+        number: /\d/.test(password),
+        special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+      };
+
+      requirements.forEach(req => {
+        const requirement = req.dataset.requirement;
+        req.classList.toggle('met', checks[requirement]);
+      });
+
+      const strength = Object.values(checks).filter(Boolean).length;
+      strengthMeter.className = 'strength-meter ' +
+        (strength <= 2 ? 'weak' : strength === 3 ? 'medium' : 'strong');
+
+      return checks;
+    }
+
+    passwordInput.addEventListener('input', e => {
+      checkPassword(e.target.value);
+    });
+
+    function validateField(input, check) {
+      const group = input.closest('.form-group');
+      const isValid = check(input);
+      group.classList.toggle('error', !isValid);
+      return isValid;
+    }
+
+    // Role change: show class code for students
+    document.getElementById('reg-role').addEventListener('change', () => {
+      const role = document.getElementById('reg-role');
+      const classCodeGroup = document.getElementById('class-code-group');
+      if (role.value === 'student') {
+        classCodeGroup.style.display = 'block';
+      } else {
+        classCodeGroup.style.display = 'none';
+        document.getElementById('reg-class-code').value = '';
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.style.display = 'none';
+
+      const name = document.getElementById('reg-name');
+      const email = document.getElementById('reg-email');
+      const role = document.getElementById('reg-role');
+      const classCodeInput = document.getElementById('reg-class-code');
+
+      const isNameValid = validateField(name, input =>
+        input.value.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(input.value));
+
+      const isEmailValid = validateField(email, input =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value));
+
+      const isPasswordValid = validateField(passwordInput, input => {
+        const checks = checkPassword(input.value);
+        return Object.values(checks).every(Boolean);
+      });
+
+      const isRoleValid = validateField(role, input =>
+        ['student', 'teacher'].includes(input.value));
+
+      if (!isNameValid || !isEmailValid || !isPasswordValid || !isRoleValid) {
+        return;
+      }
+
+      try {
+        form.classList.add('loading');
+
+        const payload = {
+          name: name.value.trim(),
+          email: email.value.trim(),
+          password: passwordInput.value,
+          role: role.value
+        };
+
+        if (role.value === 'student' && classCodeInput.value.trim()) {
+          payload.classCode = classCodeInput.value.trim().toUpperCase();
+        }
+
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Registration failed');
+        }
+
+        await Smartshala.alert('Account created successfully! Please login.', 'Success');
+        window.location.href = 'login.html';
+
+      } catch (err) {
+        errorMsg.textContent = err.message || 'Registration failed. Please try again.';
+        errorMsg.style.display = 'block';
+      } finally {
+        form.classList.remove('loading');
+      }
+    });
+  </script>
+</body>
+
+</html>

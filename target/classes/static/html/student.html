@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student - Smartshala</title>
+  <script>
+    // Legacy redirect — send to proper dashboard
+    const auth = JSON.parse(localStorage.getItem('smartshala_auth') || sessionStorage.getItem('smartshala_auth') || 'null');
+    if (auth && auth.isAuthenticated && auth.role === 'student') {
+      window.location.replace('student-dashboard.html');
+    } else {
+      window.location.replace('login.html');
+    }
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>

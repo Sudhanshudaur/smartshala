@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Smartshala : Smarter Remote Learning</title>
+  <meta name="description" content="Create and join live classes, manage students, and deliver interactive lessons  –  built for teachers and learners.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
+    /* Hero */
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(99,102,241,0.08); color: #6366f1; border: 1px solid rgba(99,102,241,0.2); border-radius: 50rem; padding: 6px 16px; font-size: 13px; font-weight: 500; }
+    .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: #6366f1; }
+    .hero-title { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.15; color: #171717; }
+    .hero-title .text-primary { color: #6366f1 !important; }
+    .hero-desc { font-size: 1.1rem; color: #737373; line-height: 1.7; }
+    .hero-stat { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; color: #525252; }
+    .hero-stat .material-icons { font-size: 18px; color: #6366f1; }
+
+    /* Hero Image Card */
+    .hero-img-card { position: relative; background: #fff; border-radius: 1.5rem; padding: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.08); border: 1px solid #e5e5e5; }
+    .hero-img-card img { border-radius: 1.2rem; width: 100%; display: block; }
+    .hero-float { position: absolute; background: #fff; border-radius: 50rem; display: flex; align-items: center; gap: 10px; padding: 8px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); border: 1px solid #f0f0f0; font-size: 13px; z-index: 2; }
+    .hero-float .float-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(99,102,241,0.1); color: #6366f1; flex-shrink: 0; }
+    .hero-float .float-icon .material-icons { font-size: 18px; }
+    .hero-float-1 { top: 20px; right: -30px; }
+    .hero-float-2 { bottom: 30px; left: -30px; }
+
+    /* Section label */
+    .section-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #6366f1; margin-bottom: 12px; }
+
+    /* Feature cards */
+    .feature-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 1.2rem; padding: 2rem; text-align: center; transition: all 0.3s; height: 100%; }
+    .feature-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: transparent; }
+    .feature-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
+    .feature-icon .material-icons { font-size: 26px; }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: #171717; }
+    .feature-card p { font-size: 0.88rem; color: #737373; margin: 0; line-height: 1.6; }
+
+    /* Step cards */
+    .step-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 1.2rem; padding: 2rem; text-align: center; transition: all 0.3s; height: 100%; }
+    .step-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    .step-num { width: 48px; height: 48px; border-radius: 50%; background: #6366f1; color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; font-size: 1.2rem; font-weight: 800; }
+    .step-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: #171717; }
+    .step-card p { font-size: 0.88rem; color: #737373; margin: 0; line-height: 1.6; }
+
+    /* Platform feature list */
+    .platform-feature { display: flex; gap: 16px; margin-bottom: 1.5rem; }
+    .platform-feature .pf-icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(99,102,241,0.1); color: #6366f1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .platform-feature .pf-icon .material-icons { font-size: 20px; }
+    .platform-feature h4 { font-size: 0.95rem; font-weight: 700; margin: 0 0 4px; color: #171717; }
+    .platform-feature p { font-size: 0.85rem; color: #737373; margin: 0; line-height: 1.6; }
+
+    /* Platform image grid */
+    .platform-img-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .platform-img-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 1rem; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+    /* Testimonial card */
+    .testimonial-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 1.2rem; padding: 1.75rem; height: 100%; transition: all 0.3s; }
+    .testimonial-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+    .stars { color: #facc15; font-size: 16px; }
+    .testimonial-card blockquote { font-size: 0.92rem; font-weight: 500; color: #171717; line-height: 1.6; margin: 1rem 0 0; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #f0f0f0; }
+    .testimonial-author img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    .testimonial-author h6 { font-size: 0.88rem; font-weight: 700; margin: 0; color: #171717; }
+    .testimonial-author small { color: #737373; font-size: 0.8rem; }
+
+    /* Contact */
+    .contact-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 1.2rem; padding: 2rem; box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+    .contact-card .form-control { border-radius: 0.75rem; border: 1px solid #e5e5e5; padding: 0.65rem 1rem; }
+    .contact-card .form-control:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+
+    /* Footer */
+    .site-footer { background: #fafafa; border-top: 1px solid #e5e5e5; }
+    .site-footer a { color: #525252; text-decoration: none; font-size: 0.88rem; }
+    .site-footer a:hover { color: #6366f1; }
+    .footer-brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.15rem; color: #171717; text-decoration: none; }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+      .hero-float { display: none; }
+      .platform-img-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 575px) {
+      .hero-stats { flex-direction: column; gap: 8px !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top" style="padding:10px 0">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <span class="material-icons text-primary" style="font-size:28px">school</span>
+        <span class="fw-bold" style="font-size:1.15rem">Smartshala</span>
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a href="#hero" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="#features" class="nav-link">Features</a></li>
+          <li class="nav-item"><a href="#how-it-works" class="nav-link">How It Works</a></li>
+          <li class="nav-item"><a href="#testimonials" class="nav-link">Testimonials</a></li>
+          <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+        <div class="d-flex gap-2">
+          <a href="login.html" class="btn btn-outline-primary btn-sm px-3">Login</a>
+          <a href="register.html" class="btn btn-primary btn-sm px-3">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <section class="py-5" id="hero" style="padding-top:5rem!important;padding-bottom:5rem!important">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <div class="hero-badge mb-3">
+            <span class="dot"></span>
+            Smart Classroom Platform
+          </div>
+          <h1 class="hero-title mb-3">
+            Smartshala<br>
+            <span class="text-primary">Smarter Remote</span><br>
+            Learning
+          </h1>
+          <p class="hero-desc mb-4">
+            Create and join live classes, manage students, and deliver interactive lessons  –  built for teachers and learners.
+          </p>
+          <div class="d-flex gap-3 mb-4">
+            <a href="register.html" class="btn btn-primary px-4">
+              Start Learning
+              <span class="material-icons ms-1" style="font-size:16px">arrow_forward</span>
+            </a>
+            <a href="#features" class="btn btn-light px-4">
+              <span class="material-icons text-primary me-1" style="font-size:16px">play_circle</span>
+              Learn More
+            </a>
+          </div>
+          <div class="d-flex gap-4 flex-wrap hero-stats">
+            <div class="hero-stat">
+              <span class="material-icons">group</span>
+              <span><strong>Free</strong> for Students</span>
+            </div>
+            <div class="hero-stat">
+              <span class="material-icons">videocam</span>
+              <span><strong>Live</strong> Classes</span>
+            </div>
+            <div class="hero-stat">
+              <span class="material-icons">verified</span>
+              <span><strong>Role-based</strong> Access</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="hero-img-card">
+            <img src="../images/hero-img.jpg" alt="Smartshala Live Classroom" />
+            <div class="hero-float hero-float-1">
+              <div class="float-icon"><span class="material-icons">videocam</span></div>
+              <div>
+                <div class="fw-bold">Live Classes</div>
+                <div style="color:#737373;font-size:12px">Real-time video</div>
+              </div>
+            </div>
+            <div class="hero-float hero-float-2">
+              <div class="float-icon"><span class="material-icons">dashboard</span></div>
+              <div>
+                <div class="fw-bold">Smart Dashboard</div>
+                <div style="color:#737373;font-size:12px">Teacher & Student</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section class="py-5" id="features" style="padding-top:5rem!important;padding-bottom:5rem!important;background:#fafafa">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="section-label">Features</div>
+        <h2 class="fw-bold" style="font-size:2rem">Everything You Need to <span class="text-primary">Teach & Learn</span></h2>
+        <p class="text-muted mx-auto" style="max-width:520px">Powerful tools to manage your classroom, engage students, and track progress  –  all in one place.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(99,102,241,0.1);color:#6366f1">
+              <span class="material-icons">videocam</span>
+            </div>
+            <h3>Live Classes</h3>
+            <p>High-quality video sessions with screen sharing and real-time chat for interactive learning.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(16,185,129,0.1);color:#10b981">
+              <span class="material-icons">dashboard</span>
+            </div>
+            <h3>Role-based Dashboards</h3>
+            <p>Dedicated interfaces for teachers and students. Teachers manage, students learn  –  all in one place.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b">
+              <span class="material-icons">assignment</span>
+            </div>
+            <h3>Assignments & Notes</h3>
+            <p>Create and distribute assignments, share lecture notes, and keep study materials organized.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(239,68,68,0.1);color:#ef4444">
+              <span class="material-icons">leaderboard</span>
+            </div>
+            <h3>Gamified Learning</h3>
+            <p>Engage students with leaderboards and progress tracking to foster healthy competition.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="py-5" id="how-it-works" style="padding-top:5rem!important;padding-bottom:5rem!important">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="section-label">How It Works</div>
+        <h2 class="fw-bold" style="font-size:2rem">Get Started in <span class="text-primary">3 Simple Steps</span></h2>
+        <p class="text-muted mx-auto" style="max-width:520px">Whether you're a teacher or student, Smartshala makes it easy to get started.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h3>Create Your Account</h3>
+            <p>Sign up as a Teacher or Student in seconds. It's completely free to get started.</p>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h3>Create or Join a Class</h3>
+            <p>Teachers create classes and share a unique code. Students join with the 6-character class code.</p>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h3>Start Live Learning</h3>
+            <p>Launch live video sessions, share your screen, and interact with chat in real time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLATFORM DETAILS ============ -->
+  <section class="py-5" id="platform" style="padding-top:5rem!important;padding-bottom:5rem!important;background:#fafafa">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <div class="section-label">Platform</div>
+          <h2 class="fw-bold mb-4" style="font-size:2rem">Built for <span class="text-primary">Modern Classrooms</span></h2>
+          <p class="text-muted mb-4">Smartshala brings together everything you need for seamless online education.</p>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="platform-feature">
+                <div class="pf-icon"><span class="material-icons">videocam</span></div>
+                <div><h4>WebRTC Video</h4><p>Real-time video powered by WebRTC for low-latency streaming.</p></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="platform-feature">
+                <div class="pf-icon"><span class="material-icons">screen_share</span></div>
+                <div><h4>Screen Sharing</h4><p>Share your screen for presentations and whiteboard sessions.</p></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="platform-feature">
+                <div class="pf-icon"><span class="material-icons">fiber_manual_record</span></div>
+                <div><h4>Lecture Recording</h4><p>Record live sessions for students to review later.</p></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="platform-feature">
+                <div class="pf-icon"><span class="material-icons">emoji_events</span></div>
+                <div><h4>Leaderboards</h4><p>Gamify learning with scores and class-level rankings.</p></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="platform-feature">
+                <div class="pf-icon"><span class="material-icons">note_add</span></div>
+                <div><h4>Notes & Materials</h4><p>Upload study notes, PDFs, and supplementary materials.</p></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="platform-feature">
+                <div class="pf-icon"><span class="material-icons">admin_panel_settings</span></div>
+                <div><h4>Admin Dashboard</h4><p>Full control over users, classes, and platform settings.</p></div>
+              </div>
+            </div>
+          </div>
+          <a href="register.html" class="btn btn-primary mt-2 px-4">Get Started Free</a>
+        </div>
+        <div class="col-lg-6">
+          <div class="platform-img-grid">
+            <img src="../images/course-img-1.jpg" alt="Live Class Session" />
+            <img src="../images/course-img-2.jpg" alt="Student Dashboard" />
+            <img src="../images/course-img-3.jpg" alt="Teacher Dashboard" />
+            <img src="../images/course-img-4.jpg" alt="Leaderboard" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS ============ -->
+  <section class="py-5" id="testimonials" style="padding-top:5rem!important;padding-bottom:5rem!important">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="section-label">Testimonials</div>
+        <h2 class="fw-bold" style="font-size:2rem">What Our <span class="text-primary">Users</span> Say</h2>
+        <p class="text-muted">See how Smartshala is transforming the way teachers and students connect.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="testimonial-card">
+            <div class="stars">
+              <span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span>
+            </div>
+            <blockquote>"Smartshala made online teaching so easy! The live class feature with screen sharing is amazing. My students love the interactive sessions."</blockquote>
+            <div class="testimonial-author">
+              <img src="../images/avatar/avatar-1.jpg" alt="Priya Sharma" />
+              <div>
+                <h6>Priya Sharma</h6>
+                <small>Mathematics Teacher</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="testimonial-card">
+            <div class="stars">
+              <span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span>
+            </div>
+            <blockquote>"I can join classes with just a code and watch recorded lectures whenever I want. The leaderboard keeps me motivated to study more!"</blockquote>
+            <div class="testimonial-author">
+              <img src="../images/avatar/avatar-2.jpg" alt="Rahul Verma" />
+              <div>
+                <h6>Rahul Verma</h6>
+                <small>Class XII Student</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="testimonial-card">
+            <div class="stars">
+              <span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span>
+            </div>
+            <blockquote>"The admin dashboard gives me full control over the platform. Managing teachers and students has never been this simple."</blockquote>
+            <div class="testimonial-author">
+              <img src="../images/avatar/avatar-3.jpg" alt="Anita Gupta" />
+              <div>
+                <h6>Anita Gupta</h6>
+                <small>School Administrator</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="py-5" id="contact" style="padding-top:5rem!important;padding-bottom:5rem!important;background:#fafafa">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="text-center mb-4">
+            <div class="section-label">Contact</div>
+            <h2 class="fw-bold" style="font-size:2rem">Get in <span class="text-primary">Touch</span></h2>
+            <p class="text-muted">Have questions or want to collaborate? Drop us a message.</p>
+          </div>
+          <div class="contact-card">
+            <form id="contact-form">
+              <div class="mb-3">
+                <label class="form-label fw-semibold small" for="contact-name">Name</label>
+                <input type="text" class="form-control" id="contact-name" required placeholder="John Doe">
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold small" for="contact-email">Email</label>
+                <input type="email" class="form-control" id="contact-email" required placeholder="john@example.com">
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold small" for="contact-message">Message</label>
+                <textarea class="form-control" id="contact-message" rows="4" required placeholder="How can we help?"></textarea>
+              </div>
+              <div class="d-grid">
+                <button class="btn btn-primary" type="submit">Send Message</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer py-5">
+    <div class="container">
+      <div class="row g-5">
+        <div class="col-lg-4">
+          <a class="footer-brand mb-3 d-inline-flex" href="index.html">
+            <span class="material-icons text-primary" style="font-size:24px">school</span>
+            <span>Smartshala</span>
+          </a>
+          <p class="text-muted mt-3" style="font-size:0.88rem;line-height:1.7">Empowering teachers and students with a modern, interactive, and free remote learning platform.</p>
+          <div class="d-flex flex-column gap-2 mt-3">
+            <span class="d-flex align-items-center gap-2" style="font-size:0.88rem">
+              <span class="material-icons text-primary" style="font-size:16px">email</span>
+              contact@smartshala.com
+            </span>
+            <span class="d-flex align-items-center gap-2" style="font-size:0.88rem">
+              <span class="material-icons text-primary" style="font-size:16px">location_on</span>
+              India
+            </span>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="row">
+            <div class="col-4">
+              <h6 class="fw-bold mb-3" style="font-size:0.95rem">Platform</h6>
+              <ul class="list-unstyled d-flex flex-column gap-2">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <h6 class="fw-bold mb-3" style="font-size:0.95rem">For Teachers</h6>
+              <ul class="list-unstyled d-flex flex-column gap-2">
+                <li><a href="register.html">Create Account</a></li>
+                <li><a href="teacher-dashboard.html">Dashboard</a></li>
+                <li><a href="liveclass.html">Live Classes</a></li>
+                <li><a href="lectures.html">Lectures</a></li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <h6 class="fw-bold mb-3" style="font-size:0.95rem">For Students</h6>
+              <ul class="list-unstyled d-flex flex-column gap-2">
+                <li><a href="register.html">Sign Up Free</a></li>
+                <li><a href="student-dashboard.html">Dashboard</a></li>
+                <li><a href="notes.html">My Notes</a></li>
+                <li><a href="leaderboard.html">Leaderboard</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-top mt-4 pt-4 text-center">
+        <p class="text-muted mb-0" style="font-size:0.85rem">Â© 2025 Smartshala. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/theme-toggle.js"></script>
+  <script>
+    // Smooth scroll
+    document.querySelectorAll('.nav-link[href^="#"]').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+      });
+    });
+
+    // Active link on scroll
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll(".nav-link");
+    window.addEventListener("scroll", () => {
+      let scrollPos = window.scrollY + 100;
+      sections.forEach(sec => {
+        if (scrollPos >= sec.offsetTop && scrollPos < sec.offsetTop + sec.offsetHeight) {
+          navLinks.forEach(link => {
+            link.classList.remove("active");
+            if (link.getAttribute("href") === `#${sec.id}`) link.classList.add("active");
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Dashboard - Smartshala</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <!-- Dashboard Navbar -->
+  <nav class="navbar navbar-expand-lg dashboard-nav">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand d-inline-flex gap-2 align-items-center" href="index.html">
+        <span class="material-icons text-primary" style="font-size:24px">school</span>
+        <span class="fw-bold">Smartshala</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dashNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="dashNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
+          <li class="nav-item"><a class="nav-link active" href="student-dashboard.html"><span class="material-icons">dashboard</span> Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="liveclass.html"><span class="material-icons">videocam</span> Live Class</a></li>
+          <li class="nav-item"><a class="nav-link" href="lectures.html"><span class="material-icons">video_library</span> My Lectures</a></li>
+          <li class="nav-item"><a class="nav-link" href="notes.html"><span class="material-icons">note</span> My Notes</a></li>
+          <li class="nav-item"><a class="nav-link" href="ai-planner.html"><span class="material-icons">route</span> AI Planner</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-3">
+          <div class="profile-btn">
+            <div class="text-end">
+              <span class="profile-name" id="profile-name">Student</span>
+              <span class="profile-role d-block">Student</span>
+            </div>
+            <img src="https://ui-avatars.com/api/?name=Student&background=random" alt="Profile" id="profile-img" style="width:36px;height:36px;border-radius:50%;border:2px solid #e5e5e5">
+          </div>
+          <a href="#" id="logout-btn" class="btn btn-outline-primary btn-sm">
+            <span class="material-icons" style="font-size:16px">logout</span> Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <!-- Page Header -->
+    <div class="page-header mb-4">
+      <div class="d-flex justify-content-between align-items-center position-relative" style="z-index:1">
+        <div>
+          <h1><span class="material-icons me-2" style="font-size:1.5rem;vertical-align:middle">school</span>Student Dashboard</h1>
+          <p>View your enrolled classes and join sessions</p>
+        </div>
+        <button id="join-class-btn" class="btn btn-light">
+          <span class="material-icons" style="font-size:1.1rem;margin-right:0.5rem">add_link</span>
+          Join New Class
+        </button>
+      </div>
+    </div>
+
+    <!-- Enrolled Classes -->
+    <div class="card rounded-4 border-0" style="background:#eef2ff; box-shadow:inset 0 2px 4px rgba(0,0,0,0.02)">
+      <div class="card-header bg-transparent px-4 py-3 border-0 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0 fw-bold" style="color:#3730a3">My Classes</h4>
+      </div>
+      <div class="card-body p-4">
+        <div id="class-list-container" class="grid-3">
+          <div class="row g-3 w-100"><div class="col-lg-4 col-md-6"><div class="card rounded-4 border-0 p-3"><div class="placeholder-glow"><span class="placeholder col-6 mb-2 d-block" style="height:1rem;border-radius:.5rem"></span><span class="placeholder col-8 mb-2 d-block" style="height:.75rem;border-radius:.5rem"></span><span class="placeholder col-4 d-block" style="height:.75rem;border-radius:.5rem"></span></div></div></div><div class="col-lg-4 col-md-6"><div class="card rounded-4 border-0 p-3"><div class="placeholder-glow"><span class="placeholder col-6 mb-2 d-block" style="height:1rem;border-radius:.5rem"></span><span class="placeholder col-8 mb-2 d-block" style="height:.75rem;border-radius:.5rem"></span><span class="placeholder col-4 d-block" style="height:.75rem;border-radius:.5rem"></span></div></div></div><div class="col-lg-4 col-md-6"><div class="card rounded-4 border-0 p-3"><div class="placeholder-glow"><span class="placeholder col-6 mb-2 d-block" style="height:1rem;border-radius:.5rem"></span><span class="placeholder col-8 mb-2 d-block" style="height:.75rem;border-radius:.5rem"></span><span class="placeholder col-4 d-block" style="height:.75rem;border-radius:.5rem"></span></div></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card rounded-4 border-0 mt-4" style="background:#eef2ff; box-shadow:inset 0 2px 4px rgba(0,0,0,0.02)">
+      <div class="card-header bg-transparent px-4 py-3 border-0">
+        <h4 class="mb-0 fw-bold" style="color:#3730a3">Notifications</h4>
+      </div>
+      <div class="card-body p-4" id="notifications-list">
+        <p class="text-muted mb-0">Loading notifications...</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/theme-toggle.js"></script>
+  <script>
+    // Check authentication
+    document.addEventListener('DOMContentLoaded', () => {
+      const ensure = async () => {
+        try {
+          const auth = window.Smartshala && window.Smartshala.getCurrentUser ? window.Smartshala.getCurrentUser() : JSON.parse(localStorage.getItem('smartshala_auth') || sessionStorage.getItem('smartshala_auth') || 'null');
+          if (!auth || !auth.isAuthenticated || auth.role !== 'student') {
+            window.location.href = 'login.html';
+            return;
+          }
+          if (auth.name) {
+            document.getElementById('profile-name').textContent = auth.name;
+            document.getElementById('profile-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(auth.name)}&background=random`;
+          }
+        } catch (e) { window.location.href = 'login.html'; }
+      };
+      ensure();
+    });
+
+    // Handle logout
+    document.getElementById('logout-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.Smartshala && window.Smartshala.logout) { window.Smartshala.logout(); }
+      localStorage.removeItem('smartshala_auth');
+      sessionStorage.removeItem('smartshala_auth');
+      window.location.href = 'login.html';
+    });
+
+    // Class Management
+    const classListContainer = document.getElementById('class-list-container');
+    const joinClassBtn = document.getElementById('join-class-btn');
+
+    async function fetchClasses() {
+      try {
+        const auth = Smartshala.getCurrentUser();
+        const res = await apiFetch('/api/classes', { headers: { 'Authorization': `Bearer ${auth.token}` } });
+        if (!res) return;
+        if (!res.ok) throw new Error('Session expired. Please log in again.');
+        const classes = await res.json();
+        const liveres = await apiFetch('/api/live-sessions/active', { headers: { 'Authorization': `Bearer ${auth.token}` } });
+        const liveSessions = liveres.ok ? await liveres.json() : [];
+        const activeSessions = Array.isArray(liveSessions) ? liveSessions : [];
+        const classesWithLive = classes.map(cls => ({ ...cls, isLive: activeSessions.some(session => session.class_id === cls.id) }));
+        renderClasses(classesWithLive);
+      } catch (err) {
+        classListContainer.innerHTML = `<div class="text-danger">${err.message || 'Failed to load classes'}</div>`;
+      }
+    }
+
+    async function loadNotifications() {
+      try {
+        const auth = JSON.parse(localStorage.getItem('smartshala_auth') || sessionStorage.getItem('smartshala_auth'));
+        const res = await apiFetch('/api/notifications', { headers: { 'Authorization': `Bearer ${auth.token}` } });
+        if (!res) return;
+        const notifications = await res.json();
+        document.getElementById('notifications-list').innerHTML = notifications.map(n => `
+          <a class="d-flex justify-content-between align-items-center border-bottom py-2 text-decoration-none text-dark" href="class-details.html?id=${n.class_id}">
+            <span>${n.message}</span>
+            <small class="text-muted">${n.timestamp ? new Date(n.timestamp).toLocaleString() : ''}</small>
+          </a>
+        `).join('') || '<p class="text-muted mb-0">No notifications yet.</p>';
+      } catch (err) {
+        document.getElementById('notifications-list').innerHTML = '<p class="text-muted mb-0">No notifications available.</p>';
+      }
+    }
+
+    function renderClasses(classes) {
+      if (!classes.length) {
+        classListContainer.innerHTML = `
+          <div style="grid-column:1/-1" class="empty-state">
+            <span class="material-icons">class</span>
+            <p class="mb-2">You haven't joined any classes yet.</p>
+            <button onclick="document.getElementById('join-class-btn').click()" class="btn btn-primary">Join your first class</button>
+          </div>`;
+        return;
+      }
+      classListContainer.innerHTML = classes.map(cls => `
+        <div class="class-card">
+          ${cls.isLive ? '<span class="live-badge">â— Live Now</span>' : ''}
+          <h5 class="fw-bold mb-1" style="font-size:1.1rem">${cls.name}</h5>
+          <div class="text-muted small mb-3">Instructor: ${cls.teacher_name}</div>
+          <div class="d-flex gap-2">
+            ${cls.isLive ?
+          `<button class="btn btn-success btn-sm flex-fill" onclick="window.location.href='class-details.html?id=${cls.id}'">Join Live</button>` :
+          `<button class="btn btn-outline-primary btn-sm flex-fill" onclick="window.location.href='class-details.html?id=${cls.id}'">View Class</button>`}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    joinClassBtn.addEventListener('click', async () => {
+      const code = await Smartshala.prompt('Enter 6-character Class Code:', 'Class Code');
+      if (!code) return;
+      const normalizedCode = code.trim().toUpperCase();
+      if (!normalizedCode) return;
+      try {
+        const auth = Smartshala.getCurrentUser();
+        const res = await apiFetch('/api/classes/join', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${auth.token}` }, body: JSON.stringify({ class_code: normalizedCode, classCode: normalizedCode }) });
+        if (!res) return;
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Failed to join class');
+        const className = data.class && data.class.name ? data.class.name : 'class';
+        await Smartshala.alert(data.alreadyJoined ? `You are already in ${className}.` : `Successfully joined ${className}!`, data.alreadyJoined ? 'Already Joined' : 'Success');
+        fetchClasses();
+      } catch (err) { await Smartshala.alert('Error joining class: ' + err.message); }
+    });
+
+    fetchClasses();
+    loadNotifications();
+    setInterval(loadNotifications, 30000);
+  </script>
+</body>
+</html>
